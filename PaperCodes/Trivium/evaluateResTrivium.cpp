@@ -15,6 +15,7 @@
 
 #define KEYLEN 80
 using namespace std;
+using namespace std::filesystem;
 using namespace boost;
 using namespace thread_pool;
 
@@ -250,7 +251,7 @@ void clearMem()
 
 
 template<int n>
-string termToStr(bitset<n>& term)
+string termToStr(const bitset<n>& term)
 {
     if (term.count() == 0)
         return "1";
@@ -264,8 +265,32 @@ string termToStr(bitset<n>& term)
     return res;
 }
 
+template<int n>
+string lineToStr(const vector<vector<bitset<n>>>& line)
+{
+    string res;
+    string sep0;
+    for (auto& x : line)
+    {
+        res += sep0;
+        res += '(';
+        
+        string sep1;
+        for (auto& y : x)
+        {
+            res += sep1;
+            res += termToStr<n>(y);
+            sep1 = '+';
+        }
 
-void testBalancedNessThread(const vector<vector<bitset<KEYLEN>>> & polys,const vector<dynamic_bitset<> > & lineBitExps, 
+        res += ')';
+        sep0 = '*';
+    }
+    return res;
+}
+
+
+void testBalancedNessThread(const vector<vector<bitset<KEYLEN>>>& polys, const vector<dynamic_bitset<> >& lineBitExps,
     const bitset<KEYLEN> k, int& cnt_1)
 {
     int polyNum = polys.size();
@@ -273,7 +298,7 @@ void testBalancedNessThread(const vector<vector<bitset<KEYLEN>>> & polys,const v
     dynamic_bitset<> lineBitVal(polyNum);
 
 
-    for (int i = 0; i < polyNum;i++)
+    for (int i = 0; i < polyNum; i++)
     {
         int tmpcnt = 0;
         for (auto& y : polys[i])
@@ -302,12 +327,13 @@ void testBalancedNessThread(const vector<vector<bitset<KEYLEN>>> & polys,const v
 int main(int argc, char* argv[])
 {
     vector<string> files;
+
     for (int i = 1; i < argc; i++)
     {
         string dirpath(argv[i]);
         getJustCurrentFile(dirpath, files);
     }
-
+    
 
 
 
@@ -342,14 +368,14 @@ int main(int argc, char* argv[])
     map<vector<bitset<KEYLEN>>, int, vcmp<KEYLEN>> polyIndexMap;
     int index = 0;
     for (auto& x : polyMap)
-            polyIndexMap[x.first] = index++;
+        polyIndexMap[x.first] = index++;
 
     int polyNum = polyIndexMap.size();
     cout << "Number of polys : " << polyNum << endl;
 
     vector<dynamic_bitset<> > lineBitExps;
 
-    for(auto & x : lineMap)
+    for (auto& x : lineMap)
         if (x.second % 2)
         {
             dynamic_bitset<> lineBitExp(polyNum);
@@ -361,6 +387,20 @@ int main(int argc, char* argv[])
     vector<vector<bitset<KEYLEN>>> polys(polyNum);
     for (auto& x : polyIndexMap)
         polys[x.second] = x.first;
+
+    // output to file
+    fstream fs;
+    path outputDir(argv[1]);
+    outputDir.append("res.txt");
+    cout << "Output superpoly to : "<<outputDir.string() << endl;
+    fs.open(outputDir.string(), ios::app | ios::out);
+    for(auto & x : lineMap)
+        if (x.second % 2)
+        {
+            fs << lineToStr<KEYLEN>(x.first) << endl;
+        }
+    fs.close();
+
 
     // test balancedness
     cout << "Start testing balancedness." << endl;
@@ -393,7 +433,7 @@ int main(int argc, char* argv[])
 
 
         // count the value of superpoly
-        futures.emplace_back(thread_pool.Submit(testBalancedNessThread, ref(polys), ref(lineBitExps),k, ref(cnt_1s[i % threadnum])));
+        futures.emplace_back(thread_pool.Submit(testBalancedNessThread, ref(polys), ref(lineBitExps), k, ref(cnt_1s[i % threadnum])));
     }
 
     for (auto& x : futures)

@@ -327,7 +327,10 @@ int main(int argc, char* argv[])
 	
 
     fstream fs;
-    fs.open("./res.txt", ios::app | ios::out);
+    path outputDir(argv[1]);
+    outputDir.append("res.txt");
+    cout << "Output superpoly to : " << outputDir.string() << endl;
+    fs.open(outputDir.string(), ios::app | ios::out);
     for(auto & x : terms)
     {
 	    fs<<termToStr<KEYLEN>(x)<<endl;
