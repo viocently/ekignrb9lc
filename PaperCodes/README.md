@@ -32,7 +32,7 @@ We introduce how to generate the final superpoly after the program terminates. T
 For Kreyvium and Acorn, when the propram terminates, a file "res.txt" will be gerenated in the folder "TERM". This file contains the final superpoly.
 To analyze the final superpoly, you can take the following steps:
 1. Switch to the folder "Kreyvium" or "Acorn".
-2. Type `g++ evaluateRes.cpp -o -std=c++11 -O3 -o evaluateRes` in the console to compile the source file "evaluateRes.cpp".
+2. Type `g++ evaluateRes.cpp -std=c++11 -O3 -o evaluateRes` in the console to compile the source file "evaluateRes.cpp".
 3. Type `./evaluateRes ./TERM/res.txt` in the console to start the analysis of the superpoly. When it finishes, information about the superpoly will be output.
 
 For Trivium or Grain, to obtain the final superpoly, you can take the following steps:
