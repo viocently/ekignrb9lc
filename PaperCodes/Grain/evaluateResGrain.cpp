@@ -14,6 +14,7 @@
 
 #define KEYLEN 128
 using namespace std;
+using namespace std::filesystem;
 using namespace thread_pool;
 
 mutex stream_mutex;
@@ -361,7 +362,7 @@ int main(int argc, char* argv[])
     cout << "Degree: " << maxTerm.count() << endl;
     for (int i = 0; i < KEYLEN; i++)
     {
-	cout << "Bit " << i << " involves key bits: " << ((inMap[i].count() == 0) ? 0 : inMap[i].count - 1) << endl;
+	cout << "Bit " << i << " involves key bits: " << ((inMap[i].count() == 0) ? 0 : inMap[i].count() - 1) << endl;
 	if(inMap[i].count() != KEYLEN)
 	{
 		for(int j = 0;j < KEYLEN;j++)
