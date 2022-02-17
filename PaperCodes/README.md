@@ -38,7 +38,7 @@ To analyze the final superpoly, you can take the following steps:
 For Trivium or Grain, to obtain the final superpoly, you can take the following steps:
 1. Switch to the folder "Trivium" ("Grain").
 2. Type `g++ evaluateResTrivium.cpp (evaluateResGrain.cpp) -o -std=c++17 -O3 -lpthread -o evaluateRes` in the console to compile the source file "evaluateResTrivium.cpp" ("evaluateResGrain.cpp").
-3. `./evaluateResTrivium (evaluateResGrain) ./TERM` to run the program. A file "res.txt" containing the final superpoly will be generated in the folder "TERM". Also, information 
+3. `./evaluateRes ./TERM` to run the program. A file "res.txt" containing the final superpoly will be generated in the folder "TERM". Also, information 
 about the superpoly will be output.
 
 Note that the compilation of "evaluateResTrivium.cpp" requires the support of Boost C++ Libraires, which can be downloaded from (https://www.boost.org/).
