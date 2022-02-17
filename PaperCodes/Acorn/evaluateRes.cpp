@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     // first read the superpoly into a vector of bitset
     fstream fs;
     string filepath(argv[1]);
-    fs.open(filepath);
+    fs.open(filepath, ios::in);
     
     string termStr;
     vector<bitset<128>> terms;
